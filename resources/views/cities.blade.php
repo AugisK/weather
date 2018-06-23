@@ -28,15 +28,18 @@
                     <th colspan="2">Cities</th>
                 </tr>
                 </thead>
-                <tbody>@foreach($cities as $city)
+                <tbody>
                     <tr>
                         <td>
-                            {{$city->name}}
+                            {{$cityinfo["name"]}}
+                        </td>
+                        <td>
+
                         </td>
                     </tr>
 
 
-                @endforeach</tbody>
+                </tbody>
             </table>
 
     </div>

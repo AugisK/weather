@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Gmopx\LaravelOWM\LaravelOWM;
+use Illuminate\Support\Facades\Log;
+
 
 
 class CityController extends Controller
@@ -15,8 +19,31 @@ class CityController extends Controller
      */
     public function index()
     {
+//        $cities = City::All();
+//        foreach ($cities as $city){
+//
+////            $client = new Client();
+////            $api_response = $client->get('http://api.openweathermap.org/data/2.5/weather?q=Vilnius&appid=7105908275f8e7cc2d30247fc545779c');
+////            $weather = json_encode($api_response);
+//            $lowm = new LaravelOWM();
+//            $current_weather = $lowm->getCurrentWeather($city->name);
+//            $weather= json_encode($current_weather);
+//            return view('cities', compact('weather'));
+//        }
+////        return view('cities',compact('cities'));
+
         $cities = City::All();
-        return view('cities',compact('cities'));
+        foreach ($cities as $city) {
+            $cityinfo = $this->getWeatherInformation($city->name);
+            return view("cities", compact('cityinfo'));
+        }
+    }
+
+    private function getWeatherInformation($city){
+        $client = new Client();
+            $api_response = $client->request('GET', 'http://api.openweathermap.org/data/2.5/weather?q='.$city.'&appid=7105908275f8e7cc2d30247fc545779c');
+            $body = json_decode($api_response->getBody() , true);
+            return $body;
     }
 
     /**
