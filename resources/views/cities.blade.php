@@ -29,15 +29,25 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            {{$cityinfo["name"]}}
-                        </td>
-                        <td>
 
-                        </td>
-                    </tr>
-
+                        @foreach ($weathers as $data)
+                            <tr>
+                                <td>
+                                    {{$data->name}}
+                                </td>
+                                <td>
+                                    {{$data->coord->lon}}
+                                </td>
+                                @foreach($data->weather as $weather)
+                                    <td>
+                                        {{$weather->main}}
+                                    </td>
+                                    <td>
+                                        {{$weather->icon}}
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
 
                 </tbody>
             </table>
