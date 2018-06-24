@@ -8,7 +8,8 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Gmopx\LaravelOWM\LaravelOWM;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Console\Input\Input;
 
 
 class CityController extends Controller
@@ -60,10 +61,32 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        $city = new City();
-        $city->name = $request->name;
-        $city->save();
-        return response()->json(['success'=>'City is successfully added']);
+        $validator = Validator::make($request->all(), [
+            'city' => 'required'
+        ]);
+//        Log::debug($validator);
+
+        if ($validator->fails())
+        {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+
+        $data=0;
+        $cities = City::All();
+        foreach ($cities as $city) {
+            if($city->name==$request->city){
+                $data++;
+            }
+        }
+
+        if($data==0){
+            $city = new City();
+            $city->name = $request->city;
+            $city->save();
+            return response()->json(['success'=>'City is successfully added']);
+        }
+        return response()->json(['error'=>'City already exists!']);
+
     }
 
     /**

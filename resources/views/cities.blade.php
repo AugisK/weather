@@ -9,7 +9,7 @@
                 <!-- Add new city form -->
                 <div class="row form-group">
                     <div class="input-group">
-                        <input type="text" name="name" id="name" class="form-control" placeholder="City">
+                        <input type="text" name="city" id="city" class="form-control" placeholder="City">
                         <button type="submit" class="input-group-addon success" id="ajaxSubmit"><span class="glyphicon glyphicon-ok"></span></button>
                     </div>
                 </div>
@@ -17,6 +17,7 @@
                 {{ csrf_field() }}
             </form>
             <div class="alert alert-success" style="display:none"></div>
+            <div class="alert alert-danger" style="display:none"></div>
         </div>
 
     </div>
@@ -36,14 +37,20 @@
                     url: "{{ url('/city') }}",
                     method: 'post',
                     data: {
-                        name: jQuery('#name').val(),
+                        city: jQuery('#city').val()
                     },
                     success: function(result){
-                        jQuery('.alert').show();
-                        jQuery('.alert').html(result.success);
-                        refreshData();
-                        $("#form")[0].reset();
-                    }});
+                        if(jQuery.isEmptyObject(result.error)){
+                            jQuery('.alert').hide();
+                            jQuery('.alert-success').show();
+                            jQuery('.alert-success').html(result.success);
+                            refreshData();
+                        }else{
+                        jQuery('.alert').hide();
+                        jQuery('.alert-danger').show();
+                        jQuery('.alert-danger').html(result.error);
+                        }
+                    }})
             });
         });
 
@@ -52,6 +59,7 @@
             $('div.data').load("{{ url('/data') }}", function() {
                 $('div.data').fadeIn();
             });
+            $("#form")[0].reset();
         }
     </script>
 
