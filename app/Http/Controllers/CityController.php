@@ -20,15 +20,6 @@ class CityController extends Controller
      */
     public function index()
     {
-//        $i=0;
-//        $cities = City::All();
-//        foreach ($cities as $city) {
-//            $weathers[$i] = $this->getWeatherInformation($city->name);
-//            $i++;
-//
-//        }
-//        
-//        return view("cities", compact('weathers'));
         
         $i=0;
         $cities = City::All();
@@ -40,16 +31,16 @@ class CityController extends Controller
         return view("cities", compact('weathers'));
 
     }
-
-    public function ajaxRequest()
-    {
-        return view('ajaxRequest');
-    }
-
-    public function ajaxRequestPost()
-    {
-        $input = request()->all();
-        return response()->json(['success'=>'Got Simple Ajax Request.']);
+    
+    public function refresh(){
+        $i=0;
+        $cities = City::All();
+        foreach ($cities as $city) {
+            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=7105908275f8e7cc2d30247fc545779c&units=metric');
+            $weathers[$i] = json_decode($api_response);
+            $i++;
+        }
+        return view("data", compact('weathers'));       
     }
     /**
      * Show the form for creating a new resource.

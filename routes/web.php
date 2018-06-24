@@ -16,5 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'CityController@index');
+Route::get('/data', 'CityController@refresh');
 
 Route::post('/city','CityController@store');

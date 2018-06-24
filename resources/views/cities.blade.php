@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-lg-6 col-lg-offset-3">
 
-            <form method="POST" action="/city">
+            <form method="POST" id="form">
 
                 <!-- Add new city form -->
                 <div class="row form-group">
@@ -16,46 +16,12 @@
 
                 {{ csrf_field() }}
             </form>
+            <div class="alert alert-success" style="display:none"></div>
         </div>
 
     </div>
 
-    <div class="container">
-        <div class="alert alert-success" style="display:none"></div>
-        <ul class="row nav nav-tabs">
-            @foreach ($weathers as $key=>$data)
-                <li class="{{ $key==0 ? 'active' : ''}}"><a data-toggle="tab" href="#{{$data->name}}">{{$data->name}}</a></li>
-            @endforeach
-        </ul>
-        <div class="row tab-content">
-
-            @foreach ($weathers as $key=>$data)
-                <div id="{{$data->name}}" class="tab-pane {{ $key==0 ? 'active' : ''}}">
-                    <p>
-                        Temperatūra: {{$data->main->temp}} C
-                    </p>
-                    <p>
-                        Slėgis: {{$data->main->pressure}} mm Hg
-                    </p>
-                    <p>
-                        Drėgnumas: {{$data->main->humidity}} %
-                    </p>
-                    <p>
-                        Vėjo greitis: {{$data->wind->speed}} m/s
-                    </p>
-                    @foreach($data->weather as $weather)
-                        <p>
-                            Oras: {{$weather->main}}
-                        </p>
-                        <p>
-                            Aprašymas: {{$weather->description}}
-                        </p>
-                    @endforeach
-                </div>
-            @endforeach
-
-        </div>
-    </div>
+    @include('data')
 
     <script>
         jQuery(document).ready(function(){
@@ -75,9 +41,18 @@
                     success: function(result){
                         jQuery('.alert').show();
                         jQuery('.alert').html(result.success);
+                        refreshData();
+                        $("#form")[0].reset();
                     }});
             });
         });
+
+        function refreshData() {
+            $('div.data').fadeOut();
+            $('div.data').load("{{ url('/data') }}", function() {
+                $('div.data').fadeIn();
+            });
+        }
     </script>
 
 @endsection
