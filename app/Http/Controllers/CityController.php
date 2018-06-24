@@ -41,26 +41,24 @@ class CityController extends Controller
 
     }
 
-    private function getWeatherInformation($city){
-            $client = new Client();
-            $api_response = $client->request('GET', 'http://api.openweathermap.org/data/2.5/weather?q='.$city.'&appid=7105908275f8e7cc2d30247fc545779c');
-            $body = json_decode($api_response->getBody() , true);
-            Log::debug($body);
-            return $body;
+    public function ajaxRequest()
+    {
+        return view('ajaxRequest');
     }
 
+    public function ajaxRequestPost()
+    {
+        $input = request()->all();
+        return response()->json(['success'=>'Got Simple Ajax Request.']);
+    }
     /**
      * Show the form for creating a new resource.
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $city = new City();
-        $city->name = $request->name;
-        $city->save();
-        return redirect('/');
     }
 
     /**
@@ -71,7 +69,10 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $city = new City();
+        $city->name = $request->name;
+        $city->save();
+        return response()->json(['success'=>'City is successfully added']);
     }
 
     /**

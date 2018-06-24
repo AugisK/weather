@@ -10,7 +10,7 @@
                 <div class="row form-group">
                     <div class="input-group">
                         <input type="text" name="name" id="name" class="form-control" placeholder="City">
-                        <button type="submit" class="input-group-addon success"><span class="glyphicon glyphicon-ok"></span></button>
+                        <button type="submit" class="input-group-addon success" id="ajaxSubmit"><span class="glyphicon glyphicon-ok"></span></button>
                     </div>
                 </div>
 
@@ -21,9 +21,7 @@
     </div>
 
     <div class="container">
-        {{--<div class="col-lg-12">--}}
-
-            <!-- All cities table -->
+        <div class="alert alert-success" style="display:none"></div>
         <ul class="row nav nav-tabs">
             @foreach ($weathers as $key=>$data)
                 <li class="{{ $key==0 ? 'active' : ''}}"><a data-toggle="tab" href="#{{$data->name}}">{{$data->name}}</a></li>
@@ -57,6 +55,29 @@
             @endforeach
 
         </div>
-        </div>
-    {{--</div>--}}
+    </div>
+
+    <script>
+        jQuery(document).ready(function(){
+            jQuery('#ajaxSubmit').click(function(e){
+                e.preventDefault();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    }
+                });
+                jQuery.ajax({
+                    url: "{{ url('/city') }}",
+                    method: 'post',
+                    data: {
+                        name: jQuery('#name').val(),
+                    },
+                    success: function(result){
+                        jQuery('.alert').show();
+                        jQuery('.alert').html(result.success);
+                    }});
+            });
+        });
+    </script>
+
 @endsection
