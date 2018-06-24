@@ -1,0 +1,10 @@
+.panel {
+    margin-top: 100px;
+}
+
+.tab-content {
+    padding: 25px;
+    background-color: #fff;
+    border: 1px solid #e2e3e3;
+    border-top: 0;
+}

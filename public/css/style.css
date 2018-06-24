@@ -1,0 +1,27 @@
+body, html {
+    height: 100%;
+}
+
+#panel {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.tab-content {
+    padding: 25px;
+    background-color: #fff;
+    border: 1px solid #e2e3e3;
+    border-top: 0;
+}
+
+.input-group-addon.success {
+    color: rgb(255, 255, 255);
+    background-color: rgb(92, 184, 92);
+    border-color: rgb(76, 174, 76);
+}
+
+.input-group-addon, .input-group-btn {
+    width:auto;
+}

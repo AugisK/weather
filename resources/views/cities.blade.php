@@ -2,55 +2,61 @@
 
 @section('content')
     <div class="container">
-        <h2>Add New City</h2>
+        <div class="col-lg-6 col-lg-offset-3">
 
-        <form method="POST" action="/city">
+            <form method="POST" action="/city">
 
-            <!-- Add new city form -->
-            <div class="form-group">
-                <input type="text" name="name" id="name" class="form-control">
-            </div>
+                <!-- Add new city form -->
+                <div class="row form-group">
+                    <div class="input-group">
+                        <input type="text" name="name" id="name" class="form-control" placeholder="City">
+                        <button type="submit" class="input-group-addon success"><span class="glyphicon glyphicon-ok"></span></button>
+                    </div>
+                </div>
 
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Add City</button>
-            </div>
-            {{ csrf_field() }}
-        </form>
-
+                {{ csrf_field() }}
+            </form>
+        </div>
 
     </div>
+
     <div class="container">
+        {{--<div class="col-lg-12">--}}
 
             <!-- All cities table -->
-            <table class="table">
-                <thead><tr>
-                    <th colspan="2">Cities</th>
-                </tr>
-                </thead>
-                <tbody>
+        <ul class="row nav nav-tabs">
+            @foreach ($weathers as $key=>$data)
+                <li class="{{ $key==0 ? 'active' : ''}}"><a data-toggle="tab" href="#{{$data->name}}">{{$data->name}}</a></li>
+            @endforeach
+        </ul>
+        <div class="row tab-content">
 
-                        @foreach ($weathers as $data)
-                            <tr>
-                                <td>
-                                    {{$data->name}}
-                                </td>
-                                <td>
-                                    {{$data->coord->lon}}
-                                </td>
-                                @foreach($data->weather as $weather)
-                                    <td>
-                                        {{$weather->main}}
-                                    </td>
-                                    <td>
-                                        {{$weather->icon}}
-                                    </td>
-                                @endforeach
-                            </tr>
-                        @endforeach
+            @foreach ($weathers as $key=>$data)
+                <div id="{{$data->name}}" class="tab-pane {{ $key==0 ? 'active' : ''}}">
+                    <p>
+                        Temperatūra: {{$data->main->temp}} C
+                    </p>
+                    <p>
+                        Slėgis: {{$data->main->pressure}} mm Hg
+                    </p>
+                    <p>
+                        Drėgnumas: {{$data->main->humidity}} %
+                    </p>
+                    <p>
+                        Vėjo greitis: {{$data->wind->speed}} m/s
+                    </p>
+                    @foreach($data->weather as $weather)
+                        <p>
+                            Oras: {{$weather->main}}
+                        </p>
+                        <p>
+                            Aprašymas: {{$weather->description}}
+                        </p>
+                    @endforeach
+                </div>
+            @endforeach
 
-                </tbody>
-            </table>
-
-    </div>
+        </div>
+        </div>
+    {{--</div>--}}
 @endsection

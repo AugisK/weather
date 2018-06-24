@@ -33,7 +33,7 @@ class CityController extends Controller
         $i=0;
         $cities = City::All();
         foreach ($cities as $city) {
-            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=7105908275f8e7cc2d30247fc545779c');
+            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=7105908275f8e7cc2d30247fc545779c&units=metric');
             $weathers[$i] = json_decode($api_response);
             $i++;
         }
