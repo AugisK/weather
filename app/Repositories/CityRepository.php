@@ -29,11 +29,18 @@ class CityRepository implements CityRepositoryInterface
         $this->city = $city;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getAll()
     {
         return $this->city->all();
     }
 
+    /**
+     * @param $request
+     * @return bool
+     */
     public function store($request)
     {
         $this->city->name = $request->city;
