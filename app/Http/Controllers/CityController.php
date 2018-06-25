@@ -25,7 +25,7 @@ class CityController extends Controller
         $i=0;
         $cities = City::All();
         foreach ($cities as $city) {
-            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=7105908275f8e7cc2d30247fc545779c&units=metric');
+            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid='.$city->api_token.'&units=metric');
             $weathers[$i] = json_decode($api_response);
             $i++;
         }
@@ -37,7 +37,7 @@ class CityController extends Controller
         $i=0;
         $cities = City::All();
         foreach ($cities as $city) {
-            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=7105908275f8e7cc2d30247fc545779c&units=metric');
+            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid='.$city->api_token.'&units=metric');
             $weathers[$i] = json_decode($api_response);
             $i++;
         }
@@ -62,7 +62,8 @@ class CityController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'city' => 'required'
+            'city' => 'required',
+            'api_key' => 'required'
         ]);
 //        Log::debug($validator);
 
@@ -81,7 +82,18 @@ class CityController extends Controller
 
         if($data==0){
             $city = new City();
+
+            $file = 'http://api.openweathermap.org/data/2.5/weather?q=' . $request->city . '&appid='.$request->api_key.'&units=metric';
+            $file_headers = @get_headers($file);
+            if(!$file_headers || $file_headers[0] == 'HTTP/1.1 401 Unauthorized') {
+                return response()->json(['error'=>'Invalid API key!']);
+            }else if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found'){
+                return response()->json(['error'=>'City not found!']);
+            }
+
+
             $city->name = $request->city;
+            $city->api_token = $request->api_key;
             $city->save();
             return response()->json(['success'=>'City is successfully added']);
         }

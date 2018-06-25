@@ -9,6 +9,9 @@
                 <!-- Add new city form -->
                 <div class="row form-group">
                     <div class="input-group">
+                        <input type="text" name="api_key" id="api_key" class="form-control" placeholder="API key">
+                    </div>
+                    <div class="input-group">
                         <input type="text" name="city" id="city" class="form-control" placeholder="City">
                         <button type="submit" class="input-group-addon success" id="ajaxSubmit"><span class="glyphicon glyphicon-ok"></span></button>
                     </div>
@@ -37,7 +40,8 @@
                     url: "{{ url('/city') }}",
                     method: 'post',
                     data: {
-                        city: jQuery('#city').val()
+                        city: jQuery('#city').val(),
+                        api_key: jQuery('#api_key').val()
                     },
                     success: function(result){
                         if(jQuery.isEmptyObject(result.error)){
