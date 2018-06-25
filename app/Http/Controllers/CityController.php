@@ -21,37 +21,39 @@ class CityController extends Controller
      */
     public function index()
     {
-        
-        $i=0;
-        $cities = City::All();
-        foreach ($cities as $city) {
-            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid='.$city->api_token.'&units=metric');
-            $weathers[$i] = json_decode($api_response);
-            $i++;
-        }
+        $weathers = $this->getWeathers();
         return view("cities", compact('weathers'));
 
     }
-    
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function refresh(){
-        $i=0;
+        $weathers = $this->getWeathers();
+        return view("data", compact('weathers'));       
+    }
+
+    /**
+     * @return mixed
+     * @internal param $weathers
+     */
+    public function getWeathers()
+    {
+        $i = 0;
         $cities = City::All();
         foreach ($cities as $city) {
-            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid='.$city->api_token.'&units=metric');
+            $api_response = file_get_contents('http://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=' . $city->api_token . '&units=metric');
             $weathers[$i] = json_decode($api_response);
             $i++;
         }
-        return view("data", compact('weathers'));       
+
+        if (!empty($weathers)) {
+            return $weathers;
+        }
+        return null;
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -101,48 +103,4 @@ class CityController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
